@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\API\UserRequest;
 use App\Http\Resources\API\userResource;
+use App\Http\Resources\userResoure;
 use App\Models\User;
 use App\Services\API\GroupService;
 use App\Services\API\UerService;
@@ -85,5 +87,54 @@ class UserController extends Controller
         } else {
             return sendError('Data User Not exit');
         }
+    }
+
+    public function postAdd(UserRequest $request)
+    {
+        if (Auth::user()->can('create', User::class)) {
+            $data = $request->all();
+            $result = $this->uerService->save($data);
+            $result = new userResoure($result);
+            return sendSuccess($result, 'Inserted Data User Success !');
+        } else {
+            return sendError([], 'Prohibited Access');
+        }
+
+    }
+
+    public function edit($user){
+        $result  = $this->uerService->handleEdit($user);
+        $users = $this->uerService->getById($user);
+        if($users){
+            if(Auth::user()->can('update',$users)){
+                if($result){
+                    return $result;
+                }
+            }
+            return sendError([],'Prohibited Access');
+        }else{
+            return sendError('Data User Not exit');
+        }
+    }
+
+    public function postEdit(Request $request,$user)
+    {
+        $data = $request->all();
+        $users = $this->uerService->getById($user);
+        if($users){
+            if(Auth::user()->can('update',$users)){
+                $result = $this->uerService->updateDataUser($data,$user);
+                return sendSuccess([], 'Update Data User Success !');
+            }
+            return sendError([],'Prohibited Access');
+        }else{
+            return sendError('Data User Not exit');
+        }
+
+    }
+    public function delete($post)
+    {
+        $result = $this->uerService->handleDelete($post);
+        return $result;
     }
 }

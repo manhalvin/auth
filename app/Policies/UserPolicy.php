@@ -57,7 +57,15 @@ class UserPolicy
      */
     public function create(User $user)
     {
-        //
+        $roleJson = $user->group->permissions;
+        if (!empty($roleJson)) {
+            $roleArr = json_decode($roleJson, true);
+            $check = isRole($roleArr, 'users', 'create');
+            if ($check) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -69,7 +77,15 @@ class UserPolicy
      */
     public function update(User $user, User $model)
     {
-        //
+        $roleJson = $user->group->permissions;
+        if (!empty($roleJson)) {
+            $roleArr = json_decode($roleJson, true);
+            $check = isRole($roleArr, 'users', 'update');
+            if ($check && $user->id === $model->id) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -81,7 +97,15 @@ class UserPolicy
      */
     public function delete(User $user, User $model)
     {
-        //
+        $roleJson = $user->group->permissions;
+        if (!empty($roleJson)) {
+            $roleArr = json_decode($roleJson, true);
+            $check = isRole($roleArr, 'users', 'delete');
+            if ($check && $user->id === $model->id) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

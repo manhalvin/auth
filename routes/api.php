@@ -45,6 +45,11 @@ Route::prefix('admin/')->name('admin.')->middleware('auth:sanctum')->group(funct
     Route::prefix('users')->name('users.')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('index');
         Route::get('/show/{user}', [UserController::class, 'show'])->name('show');
+
+        Route::post('/add', [UserController::class, 'postAdd']);
+        Route::get('/edit/{user}', [UserController::class, 'edit'])->name('edit');
+        Route::put('/edit/{user}', [UserController::class, 'postEdit']);
+        Route::delete('/delete/{user}', [UserController::class, 'delete'])->name('delete');
     });
 
      // Moduel Groups: Permissions ~ Roles
