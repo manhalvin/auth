@@ -60,4 +60,21 @@ class UserRepository{
         return $select;
     }
 
+    public function save($data){
+        $user = new User();
+        $user->name = $data['name'];
+        $user->email = $data['email'];
+        $user->password = Hash::make($data['password']);
+        $user->group_id = $data['group_id'];
+        $user->save();
+        return $user->fresh();
+    }
+
+    public function update($data,$id){
+        return $this->user->findOrFail($id)->update($data);
+    }
+
+    public function delete($id){
+        return $this->user->findOrFail($id)->delete();
+    }
 }
