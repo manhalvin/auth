@@ -10,4 +10,8 @@ class Groups extends Model
     use HasFactory;
     protected  $table = "groups";
     protected $guarded = [];
+
+    public function user(){
+        return $this->belongsTo(User::class,'user_id','id');
+    }
 }
