@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\PostController;
+use App\Http\Controllers\API\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Laravel\Ui\AuthCommand;
@@ -34,14 +35,15 @@ Route::prefix('admin/')->name('admin.')->middleware('auth:sanctum')->group(funct
 
         Route::get('/edit/{post}', [PostController::class, 'edit'])->name('edit');
         Route::put('/edit/{post}', [PostController::class, 'postEdit']);
-        
+
         Route::delete('/delete/{post}', [PostController::class, 'delete'])->name('delete');
         Route::get('/show/{post}', [PostController::class, 'show'])->name('show');
     });
 
     // Moduel Users
     Route::prefix('users')->name('users.')->group(function () {
-
+        Route::get('/', [UserController::class, 'index'])->name('index');
+        Route::get('/show/{user}', [UserController::class, 'show'])->name('show');
     });
 
 });
