@@ -6,8 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
 
-
-class EditPostRequest extends FormRequest
+class groupRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,11 +26,9 @@ class EditPostRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required','min:6','unique:posts,title,'. $this->title,
-            'content' => 'required|min:6',
-            'status' => 'required|integer|between:0,1',
-            'book_id' => 'required|integer',
-            'user_id' => 'required|integer',
+            'name' => 'required',
+            'permissions' => 'required',
+            'user_id' => 'required|integer'
         ];
     }
 

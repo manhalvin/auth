@@ -19,7 +19,8 @@ class groupResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'permissions' => $this->permissions,
-            'user_id' => new userResoure(User::findOrFail($this->user_id)),
+            'user_id' => $this->user->id,
+            'user_name' => $this->user->name,
             'created_at' => $this->created_at->format('d/m/Y'),
             'updated_at' => $this->updated_at->format('d/m/Y'),
         ];

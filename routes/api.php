@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\GroupsController;
 use App\Http\Controllers\API\PostController;
 use App\Http\Controllers\API\UserController;
 use Illuminate\Http\Request;
@@ -44,6 +45,20 @@ Route::prefix('admin/')->name('admin.')->middleware('auth:sanctum')->group(funct
     Route::prefix('users')->name('users.')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('index');
         Route::get('/show/{user}', [UserController::class, 'show'])->name('show');
+    });
+
+     // Moduel Groups: Permissions ~ Roles
+    Route::prefix('groups')->name('groups.')->group(function () {
+        Route::get('/', [GroupsController::class, 'index'])->name('index');
+        Route::post('/add', [GroupsController::class, 'postAdd']);
+        Route::get('/add', [GroupsController::class, 'add'])->name('add');
+
+        Route::put('edit/{group}', [GroupsController::class, 'postPermission']);
+
+        Route::put('/permission/{group}', [GroupsController::class, 'postPermission']);
+        Route::get('/permission/{group}', [GroupsController::class, 'permission']);
+
+        Route::put('/permission-advance/{group}', [GroupsController::class, 'permissionAdvance']);
     });
 
 });
