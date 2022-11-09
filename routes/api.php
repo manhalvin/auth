@@ -28,6 +28,15 @@ Route::prefix('admin/')->name('admin.')->middleware('auth:sanctum')->group(funct
     // Moduel Posts
     Route::prefix('posts')->name('posts.')->group(function () {
         Route::get('/', [PostController::class, 'index'])->name('index');
+
+        Route::post('/add', [PostController::class, 'postAdd']);
+        Route::get('/add', [PostController::class, 'add'])->name('add');
+
+        Route::get('/edit/{post}', [PostController::class, 'edit'])->name('edit');
+        Route::put('/edit/{post}', [PostController::class, 'postEdit']);
+        
+        Route::delete('/delete/{post}', [PostController::class, 'delete'])->name('delete');
+        Route::get('/show/{post}', [PostController::class, 'show'])->name('show');
     });
 
     // Moduel Users
