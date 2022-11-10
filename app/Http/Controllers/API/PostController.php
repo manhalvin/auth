@@ -5,9 +5,9 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\API\EditPostRequest;
 use App\Http\Requests\API\PostRequest;
-use App\Http\Resources\postResoure;
+use App\Http\Resources\PostResource;
 use App\Models\Posts;
-use App\Services\API\postService;
+use App\Services\API\PostService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,7 +18,7 @@ class PostController extends Controller
     protected $postService;
     const _PER_PAGE = 5;
 
-    public function __construct(postService $postService)
+    public function __construct(PostService $postService)
     {
         $this->postService = $postService;
     }
@@ -44,7 +44,7 @@ class PostController extends Controller
             if ($post->count() == 0) {
                 return sendError([], 'Data not exist');
             } else {
-                $post = postResoure::collection($post);
+                $post = PostResource::collection($post);
                 return sendSuccess($post, 'Fetch data post success');
             }
         } else {
@@ -68,7 +68,7 @@ class PostController extends Controller
         if (Auth::user()->can('create', Posts::class)) {
             $data = $request->all();
             $result = $this->postService->savePostData($data);
-            $result = new postResoure($result);
+            $result = new PostResource($result);
             return sendSuccess($result, 'Inserted Data Success !');
         } else {
             return sendError([], 'Prohibited Access');

@@ -13,13 +13,16 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('groups', function (Blueprint $table) {
+        Schema::create('permission_role', function (Blueprint $table) {
             $table->id();
-            $table->string('name',255)->nullable();
-            $table->text('permissions')->nullable();
-            $table->foreignId('user_id')
+            $table->foreignId('permission_id')
             ->nullable()
-            ->constrained('users')
+            ->constrained('permissions')
+            ->cascadeOnUpdate()
+            ->cascadeOnDelete();
+            $table->foreignId('role_id')
+            ->nullable()
+            ->constrained('roles')
             ->cascadeOnUpdate()
             ->cascadeOnDelete();
             $table->timestamps();
@@ -33,6 +36,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('groups');
+        Schema::dropIfExists('permission_role');
     }
 };

@@ -13,12 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->foreignId('group_id')
-            ->nullable()
-            ->constrained('groups')
-            ->cascadeOnUpdate()
-            ->cascadeOnDelete();
+        Schema::create('permissions', function (Blueprint $table) {
+            $table->id();
+            $table->string('title',510)->nullable();
+            $table->text('slug')->nullable();
+            $table->text('content')->nullable();
+            $table->timestamps();
         });
     }
 
@@ -29,8 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('group_id');
-        });
+        Schema::dropIfExists('permissions');
     }
 };

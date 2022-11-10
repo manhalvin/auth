@@ -2,11 +2,9 @@
 
 namespace App\Http\Resources;
 
-use App\Models\Books;
-use App\Models\User;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class postResoure extends JsonResource
+class PostResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -20,7 +18,7 @@ class postResoure extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'content' => $this->content,
-            'status' => $this->status == 1 ? "Active" : "No Active",
+            'status' => $this->status == 1 ? "Active" : "UnActive",
             'book_title' => $this->book->title,
             'user_name' => $this->user->name,
             'created_at' => $this->created_at->format('d/m/Y'),

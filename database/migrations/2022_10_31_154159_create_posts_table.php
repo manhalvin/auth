@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
             $table->text('title')->nullable();
+            $table->text('slug')->nullable();
             $table->text('content')->nullable();
             $table->boolean('status')->default(1)->nullable();
             $table->foreignId('book_id')

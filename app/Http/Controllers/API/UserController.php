@@ -5,70 +5,52 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\API\UserRequest;
 use App\Http\Resources\API\userResource;
-use App\Http\Resources\userResoure;
 use App\Models\User;
 use App\Services\API\GroupService;
-use App\Services\API\UerService;
+use App\Services\API\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
-    protected $uerService, $groupService;
+    protected $UserService, $groupService;
 
-    protected $filters,$groupIds = [];
-    protected $keywords = null;
+    protected $filters,$GroupID = [];
+    protected $search = null;
     const _PER_PAGE = 10;
-    public function __construct(UerService $uerService, GroupService $groupService)
+    public function __construct(UserService $UserService, GroupService $groupService)
     {
-        $this->uerService = $uerService;
+        $this->UserService = $UserService;
         $this->groupService = $groupService;
     }
     public function index(Request $request)
     {
-        // DB::enableQueryLog();
         $user = Auth::user();
         if ($user->can('viewAny', User::class)) {
             if ($request->has('status')) {
                 $status = $request->input('status');
-                $status = $status == 'active' ? 1 : 0;
-                $this->filters[] = ['users.status', '=', $status];
+                $this->inputStatus($status);
             }
 
             if ($request->has('role')){
                 $role = $request->input('role');
-                if(!empty($role)){
-                    $role = explode(',',$role);
-                    $this->groupIds = $this->groupService->getId($role);
-                }
+                $this->inputRole($role);
             }
 
-            if ($request->has('keywords')) {
-                $this->keywords = $request->input('keywords');
+            if ($request->has('search')) {
+                $this->search = $request->input('search');
             }
 
-            // Hanle logic sort
             $sortBy = $request->input('sort-by');
             $sortType = $request->input('sort-type');
-            $allowSort = ['asc', 'desc'];
-            if (!empty($sortType) && in_array($sortType, $allowSort)) {
-                $sortType = $sortType == 'desc' ? 'asc' : 'desc';
-            } else {
-                $sortType = 'asc';
-            }
+            $sortArr = $this->UserService->handleSort($sortBy,$sortType);
 
-            $sortArr = [
-                'sortBy' => $sortBy,
-                'sortType' => $sortType,
-            ];
-
-            $user = $this->uerService->getAllUsers($this->filters, $this->keywords, $sortArr, self::_PER_PAGE,$this->groupIds);
-            // dd(DB::getQueryLog());
+            $user = $this->UserService->getAllUsers($this->filters, $this->search, $sortArr, self::_PER_PAGE,$this->GroupID);
             if ($user->count() == 0) {
                 return sendError([], 'Data not exist');
             } else {
-                $user = userResource::collection($user);
+                $user = UserResource::collection($user);
                 return sendSuccess($user, 'Fetch data success');
             }
         }else{
@@ -77,10 +59,11 @@ class UserController extends Controller
 
     }
 
+
     public function show($user)
     {
-        $result = $this->uerService->handleShow($user);
-        $users = $this->uerService->getById($user);
+        $result = $this->UserService->handleShow($user);
+        $users = $this->UserService->getById($user);
         if ($users) {
             if (Auth::user()->can('view', $users)) {
                 if ($result) {
@@ -98,8 +81,8 @@ class UserController extends Controller
     {
         if (Auth::user()->can('create', User::class)) {
             $data = $request->all();
-            $result = $this->uerService->save($data);
-            $result = new userResoure($result);
+            $result = $this->UserService->save($data);
+            $result = new UserResource($result);
             return sendSuccess($result, 'Inserted Data User Success !');
         } else {
             return sendError([], 'Prohibited Access');
@@ -108,8 +91,8 @@ class UserController extends Controller
     }
 
     public function edit($user){
-        $result  = $this->uerService->handleEdit($user);
-        $users = $this->uerService->getById($user);
+        $result  = $this->UserService->handleEdit($user);
+        $users = $this->UserService->getById($user);
         if($users){
             if(Auth::user()->can('update',$users)){
                 if($result){
@@ -125,10 +108,10 @@ class UserController extends Controller
     public function postEdit(Request $request,$user)
     {
         $data = $request->all();
-        $users = $this->uerService->getById($user);
+        $users = $this->UserService->getById($user);
         if($users){
             if(Auth::user()->can('update',$users)){
-                $result = $this->uerService->updateDataUser($data,$user);
+                $this->UserService->updateDataUser($data,$user);
                 return sendSuccess([], 'Update Data User Success !');
             }
             return sendError([],'Prohibited Access');
@@ -139,7 +122,19 @@ class UserController extends Controller
     }
     public function delete($post)
     {
-        $result = $this->uerService->handleDelete($post);
+        $result = $this->UserService->handleDelete($post);
         return $result;
+    }
+
+    public function inputStatus($status){
+        $status = $status == 'active' ? 1 : 0;
+        $this->filters[] = ['users.status', '=', $status];
+    }
+
+    public function inputRole($role){
+        if(!empty($role)){
+            $role = explode(',',$role);
+            $this->GroupID = $this->groupService->getId($role);
+        }
     }
 }

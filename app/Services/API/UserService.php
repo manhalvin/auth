@@ -1,17 +1,21 @@
 <?php
 namespace App\Services\API;
 
-use App\Http\Resources\userResoure;
+use App\Http\Resources\API\userResource;
+use App\Repositories\API\GroupRepository;
+use App\Repositories\API\PostRepository;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\API\userRepository;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Request;
 
-class UerService{
+class UserService{
 
-    protected $userRepository;
-    public function __construct(userRepository $userRepository)
+    protected $userRepository,$postRepository;
+    public function __construct(userRepository $userRepository,GroupRepository $groupRepository)
     {
         $this->userRepository = $userRepository;
+        $this->groupRepository = $groupRepository;
     }
 
 
@@ -34,7 +38,7 @@ class UerService{
             return sendError('Data post not exit');
         } else {
             $data = $this->userRepository->getById($post);
-            return sendSuccess(new userResoure($data), 'Fetch Data Success !');
+            return sendSuccess(new UserResource($data), 'Fetch Data Success !');
         }
     }
 
@@ -52,7 +56,7 @@ class UerService{
             return sendError('Data user not exit');
         } else {
             $data = $this->userRepository->getById($user);
-            return sendSuccess(new userResoure($data), 'Fetch Data Success !');
+            return sendSuccess(new UserResource($data), 'Fetch Data Success !');
         }
     }
 
@@ -88,5 +92,24 @@ class UerService{
             return sendError([],'Prohibited Access');
         }
     }
+
+    public function handleSort($sortBy,$sortType){
+
+        $allowSort = ['asc', 'desc'];
+        if (!empty($sortType) && in_array($sortType, $allowSort)) {
+            $sortType = $sortType == 'desc' ? 'asc' : 'desc';
+        } else {
+            $sortType = 'asc';
+        }
+
+        $sortArr = [
+            'sortBy' => $sortBy,
+            'sortType' => $sortType,
+        ];
+
+        return $sortArr;
+
+    }
+
 }
 
