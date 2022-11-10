@@ -12,6 +12,11 @@ class GroupService{
         $this->groupRepository = $groupRepository;
     }
 
+    public function getId($id){
+        return $this->groupRepository->getId($id);
+    }
+
+
     public function handlePermission($group,$dataPermission,$permissions){
         $groups = $this->groupRepository->getAllListGroup();
         foreach ($groups as $k => $v){
