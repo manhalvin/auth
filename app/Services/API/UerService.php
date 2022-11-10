@@ -20,8 +20,8 @@ class UerService{
     }
 
 
-    public function getAllUsers($filters,$keywords,$sortByArr,$perPage){
-        $select = $this->userRepository->getAllUsers($filters,$keywords,$sortByArr,$perPage);
+    public function getAllUsers($filters,$keywords,$sortByArr,$perPage,$groupIds){
+        $select = $this->userRepository->getAllUsers($filters,$keywords,$sortByArr,$perPage,$groupIds);
         return $select;
     }
 

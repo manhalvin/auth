@@ -3,10 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Carbon\Carbon;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class userSeeder extends Seeder
 {
@@ -17,9 +15,14 @@ class userSeeder extends Seeder
      */
     public function run()
     {
-        User::insert([
-            ['name' => 'Quốc Mạnh','email' => 'quocmanh1998s@gmail.com','password' => Hash::make(123456789),'created_at' => Carbon::now(),'updated_at' => Carbon::now()],
-            ['name' => 'Quốc Việt','email' => 'vietquoc2001s@gmail.com','password' => Hash::make(123456789),'created_at' => Carbon::now(),'updated_at' => Carbon::now()],
-        ]);
+        for ($i = 3; $i < 300; $i++) {
+            User::create([
+                'name' => 'idName ' . $i,
+                'email' => 'demo'. $i.'@gmail.com',
+                'password' => bcrypt(123456789),
+                'group_id' => rand(1, 3),
+                'status' => rand(0,1)
+            ]);
+        }
     }
 }

@@ -54,14 +54,15 @@ class PostService{
         } else {
             $user = Auth::user();
             $post = $this->postRepository->getById($post);
+            $data = ['idPost'=>$post->id,'idUserAuth'=>Auth::id(),'idGroupUser'=>Auth::user()->group->id,'nameGroupUser'=>Auth::user()->group->name,'userCreatePostID' => $post->user_id];
             if($user->can('delete',$post)){
                 $result = $this->postRepository->delete($post->id);
                 if ($result) {
-                    return sendSuccess([], 'Delete Data Post Success !');
+                    return sendSuccess($data, 'Delete Data Post Success !');
                 }
-                return sendError([],'Delete Data Not Success');
+                return sendError($data,'Delete Data Not Success');
             }
-            return sendError([],'Prohibited Access');
+            return sendError($data,'Prohibited Access');
         }
     }
 

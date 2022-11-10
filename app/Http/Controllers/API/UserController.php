@@ -11,11 +11,15 @@ use App\Services\API\GroupService;
 use App\Services\API\UerService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
     protected $uerService, $groupService;
-    const _PER_PAGE = 3;
+
+    protected $filters,$groupIds = [];
+    protected $keywords = null;
+    const _PER_PAGE = 10;
     public function __construct(UerService $uerService, GroupService $groupService)
     {
         $this->uerService = $uerService;
@@ -23,24 +27,25 @@ class UserController extends Controller
     }
     public function index(Request $request)
     {
-
+        // DB::enableQueryLog();
         $user = Auth::user();
         if ($user->can('viewAny', User::class)) {
-            $filters = [];
-            $keywords = null;
             if ($request->has('status')) {
                 $status = $request->input('status');
                 $status = $status == 'active' ? 1 : 0;
-                $filters[] = ['users.status', '=', $status];
+                $this->filters[] = ['users.status', '=', $status];
             }
 
-            if ($request->has('group_id')) {
-                $groupId = $request->input('group_id');
-                $filters[] = ['users.group_id', '=', $groupId];
+            if ($request->has('role')){
+                $role = $request->input('role');
+                if(!empty($role)){
+                    $role = explode(',',$role);
+                    $this->groupIds = $this->groupService->getId($role);
+                }
             }
 
             if ($request->has('keywords')) {
-                $keywords = $request->input('keywords');
+                $this->keywords = $request->input('keywords');
             }
 
             // Hanle logic sort
@@ -58,8 +63,8 @@ class UserController extends Controller
                 'sortType' => $sortType,
             ];
 
-            $user = $this->uerService->getAllUsers($filters, $keywords, $sortArr, self::_PER_PAGE);
-
+            $user = $this->uerService->getAllUsers($this->filters, $this->keywords, $sortArr, self::_PER_PAGE,$this->groupIds);
+            // dd(DB::getQueryLog());
             if ($user->count() == 0) {
                 return sendError([], 'Data not exist');
             } else {
