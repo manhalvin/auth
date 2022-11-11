@@ -4,20 +4,20 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+class CreatePermissionsTable extends Migration {
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up()
-    {
+    public function up() {
         Schema::create('permissions', function (Blueprint $table) {
             $table->id();
-            $table->string('title',510)->nullable();
-            $table->text('slug')->nullable();
-            $table->text('content')->nullable();
+            $table->string('name');
+            $table->string('title');
+            $table->text('content');
+            $table->unsignedBigInteger('group_permission_id');
+            $table->foreign('group_permission_id')->references('id')->on('group_permissions')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -27,8 +27,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
-    {
+    public function down() {
         Schema::dropIfExists('permissions');
     }
-};
+}

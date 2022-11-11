@@ -13,11 +13,16 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('roles', function (Blueprint $table) {
+        Schema::create('images_post', function (Blueprint $table) {
             $table->id();
-            $table->string('title',510)->nullable();
-            $table->text('slug')->nullable();
+            $table->text('title')->nullable();
             $table->text('content')->nullable();
+            $table->text('path')->nullable();
+            $table->foreignId('post_id')
+                ->nullable()
+                ->constrained('posts')
+                ->cascadeOnUpdate()
+                ->cascadeOnDelete();
             $table->timestamps();
         });
     }
@@ -29,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('roles');
+        Schema::dropIfExists('images_post');
     }
 };

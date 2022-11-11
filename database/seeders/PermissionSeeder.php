@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Permissions;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class PermissionSeeder extends Seeder
 {
@@ -14,17 +15,15 @@ class PermissionSeeder extends Seeder
      */
     public function run()
     {
-        Permissions::insert([
-            ['title' => 'review_post', 'created_at' => now(),
+        DB::table('permissions')->insert([
+            ['name' => 'view','group_permission_id' => 7,'created_at' => now(),
                 'updated_at' => now()],
-            ['title' => 'update_post', 'created_at' => now(),
+            ['name' => 'create','group_permission_id' => 7,'created_at' => now(),
                 'updated_at' => now()],
-            ['title' => 'delete_post', 'created_at' => now(),
+            ['name' => 'edit','group_permission_id' => 7,'created_at' => now(),
                 'updated_at' => now()],
-            ['title' => 'restore_post', 'created_at' => now(),
-                'updated_at' => now()],
-            ['title' => 'force_delete_post', 'created_at' => now(),
-                'updated_at' => now()],
+            ['name' => 'delete','group_permission_id' => 7,'created_at' => now(),
+                'updated_at' => now()]
         ]);
     }
 }
