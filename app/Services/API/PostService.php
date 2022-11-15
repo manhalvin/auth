@@ -9,8 +9,8 @@ use Illuminate\Support\Facades\Request;
 class PostService{
 
     protected $postRepository;
+    protected $data = [];
 
-    const PER_PAGE = 5;
     public function __construct(postRepository $postRepository)
     {
         $this->postRepository = $postRepository;
@@ -27,7 +27,7 @@ class PostService{
             $limit = $request->input('limit');
             $post = $this->getAllPosts($keywords, $limit);
         } else {
-            $post = $this->getAllPosts($keywords, self::PER_PAGE);
+            $post = $this->getAllPosts($keywords, PER_PAGE);
         }
 
         if ($post->count() == 0) {

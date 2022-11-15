@@ -2,9 +2,7 @@
 
 namespace App\Http\Resources\API;
 
-use App\Http\Resources\groupResource;
-use App\Models\Groups;
-use App\Services\API\GroupService;
+
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource

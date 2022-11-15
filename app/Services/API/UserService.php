@@ -1,21 +1,18 @@
 <?php
 namespace App\Services\API;
 
-use App\Http\Resources\API\userResource;
-use App\Repositories\API\GroupRepository;
-use App\Repositories\API\PostRepository;
+use App\Http\Resources\API\UserResource;
 use App\Repositories\API\RoleRepository;
 use Illuminate\Support\Facades\Auth;
-use App\Repositories\API\userRepository;
+use App\Repositories\API\UserRepository;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Request;
 
 class UserService{
 
-    protected $userRepository;
-    protected $filters,$group_id = [];
+    protected $userRepository,$roleRepository;
+    protected $filters,$group_id,$data = [];
     protected $search = null;
-    const PER_PAGE = 5;
 
     public function __construct(userRepository $userRepository,RoleRepository $roleRepository)
     {
@@ -46,7 +43,7 @@ class UserService{
         $sortType = $request->input('sort-type');
         $sortArr = $this->handleSort($sortBy,$sortType);
 
-        $user = $this->getAllUsers($this->filters, $this->search, $sortArr, self::PER_PAGE,$this->group_id);
+        $user = $this->getAllUsers($this->filters, $this->search, $sortArr, PER_PAGE,$this->group_id);
         if ($user->count() == 0) {
             return sendError([], 'Data not exist');
         } else {

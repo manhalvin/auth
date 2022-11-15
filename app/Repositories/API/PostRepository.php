@@ -6,7 +6,6 @@ use App\Models\Posts;
 class PostRepository
 {
     protected $posts;
-    const _PER_PAGE = 5;
     public function __construct(Posts $posts)
     {
         $this->posts = $posts;
@@ -30,7 +29,7 @@ class PostRepository
         if (!empty($limit)) {
             $posts = $posts->paginate($limit);
         } else {
-            $posts = $posts->paginate(self::_PER_PAGE);
+            $posts = $posts->paginate(PER_PAGE);
         }
 
         return $posts;

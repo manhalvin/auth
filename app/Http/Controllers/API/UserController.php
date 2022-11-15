@@ -5,9 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\API\EditUserRequest;
 use App\Http\Requests\API\UserRequest;
-use App\Http\Resources\API\userResource;
 use App\Models\User;
-use App\Services\API\GroupService;
 use App\Services\API\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -37,9 +35,9 @@ class UserController extends Controller
     public function show($user)
     {
         $result = $this->UserService->handleShow($user);
-        $users = $this->UserService->getById($user);
-        if ($users) {
-            if (Auth::user()->can('view', $users)) {
+        $user = $this->UserService->getById($user);
+        if ($user) {
+            if (Auth::user()->can('view', $user)) {
                 return $result;
             } else {
                 return sendError([], 'Prohibited Access');

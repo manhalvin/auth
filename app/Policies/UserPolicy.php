@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Auth;
 class UserPolicy
 {
     use HandlesAuthorization;
-    const GROUP_PERMISSION_ID =  7;
     protected $roleArr = [];
 
     /**
@@ -30,7 +29,7 @@ class UserPolicy
                     if($v->role_id == $user->role->id){
                         foreach (Permission::all() as $permission){
                             if($v->permission_id == $permission->id){
-                                if($permission->group_permission_id == self::GROUP_PERMISSION_ID){
+                                if($permission->group_permission_id == 7){
                                     $this->roleArr[$v->role_id][] = $permission->name;
                                 }
                             }
@@ -137,10 +136,7 @@ class UserPolicy
      * @param  \App\Models\User  $model
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, User $model)
-    {
-        //
-    }
+
 
     /**
      * Determine whether the user can permanently delete the model.
@@ -149,8 +145,4 @@ class UserPolicy
      * @param  \App\Models\User  $model
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, User $model)
-    {
-        //
-    }
 }

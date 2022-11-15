@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\API\GroupPermissionRequest;
 use App\Http\Requests\API\UpdateGroupPermissionRequest;
 use App\Services\API\GroupPermissionService;
-use Dotenv\Util\Str;
 use Illuminate\Http\Request;
 
 class AdminGroupPermissionController extends Controller
