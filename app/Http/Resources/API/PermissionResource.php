@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\API;
 
-use App\Models\bookTypes;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class BookResource extends JsonResource
+class PermissionResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,12 +14,12 @@ class BookResource extends JsonResource
      */
     public function toArray($request)
     {
-
         return [
             'id' => $this->id,
-            'title' => $this->title,
-            'content' => $this->content,
-            'type_id' => new bookTypesResource(bookTypes::findOrFail($this->type_id)),
+            'name' => $this->name,
+            'title' => optional($this->title),
+            'content' => optional($this->content),
+            'group_permission_name' => $this->groupPermission->name,
             'created_at' => $this->created_at->format('d/m/Y'),
             'updated_at' => $this->updated_at->format('d/m/Y'),
         ];

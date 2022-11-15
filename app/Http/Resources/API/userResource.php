@@ -7,7 +7,7 @@ use App\Models\Groups;
 use App\Services\API\GroupService;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class userResource extends JsonResource
+class UserResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -24,8 +24,8 @@ class userResource extends JsonResource
             'status' => $this->status == 1 ? "Active" : "UnActive",
             'created_at' => $this->created_at->format('d/m/Y'),
             'updated_at' => $this->updated_at->format('d/m/Y'),
-            'group_name' => $this->group->name,
-            'group_id' =>  $this->group->id
+            'role_name' => $this->role->name,
+            'role_id' =>  $this->role->id
         ];
     }
 }
