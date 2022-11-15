@@ -4,6 +4,7 @@ namespace App\Services\API;
 use App\Http\Resources\API\userResource;
 use App\Repositories\API\GroupRepository;
 use App\Repositories\API\PostRepository;
+use App\Repositories\API\RoleRepository;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\API\userRepository;
 use Illuminate\Support\Facades\Hash;
@@ -11,11 +12,54 @@ use Illuminate\Support\Facades\Request;
 
 class UserService{
 
-    protected $userRepository,$postRepository;
-    public function __construct(userRepository $userRepository,GroupRepository $groupRepository)
+    protected $userRepository;
+    protected $filters,$group_id = [];
+    protected $search = null;
+    const PER_PAGE = 5;
+
+    public function __construct(userRepository $userRepository,RoleRepository $roleRepository)
     {
         $this->userRepository = $userRepository;
-        $this->groupRepository = $groupRepository;
+        $this->roleRepository = $roleRepository;
+    }
+
+    public function handleIndex($request){
+        if ($request->has('status')) {
+            $status = $request->input('status');
+            $status = $status == 'active' ? 1 : 0;
+            $this->filters[] = ['users.status', '=', $status];
+        }
+
+        if ($request->has('role')){
+            $role = $request->input('role');
+            if(!empty($role)){
+                $role = explode(',',$role);
+                $this->group_id = $this->roleRepository->getIdRole($role);
+            }
+        }
+
+        if ($request->has('search')) {
+            $this->search = $request->input('search');
+        }
+
+        $sortBy = $request->input('sort-by');
+        $sortType = $request->input('sort-type');
+        $sortArr = $this->handleSort($sortBy,$sortType);
+
+        $user = $this->getAllUsers($this->filters, $this->search, $sortArr, self::PER_PAGE,$this->group_id);
+        if ($user->count() == 0) {
+            return sendError([], 'Data not exist');
+        } else {
+            $user = UserResource::collection($user);
+            return sendSuccess($user, 'Fetch data success');
+        }
+    }
+
+    public function handleAdd($request){
+        $data = $request->all();
+        $result = $this->save($data);
+        $result = new UserResource($result);
+        return sendSuccess($result, 'Inserted Data User Success !');
     }
 
 
@@ -61,12 +105,12 @@ class UserService{
     }
 
     public function updateDataUser($data,$id){
-        // return $this->userRepository->update($data,$id);
         return $this->userRepository->update(
             [
                 'password'=> bcrypt($data['password']),
                 'name' => $data['name'],
-                'group_id' => $data['group_id'],
+                'role_id' => $data['role_id'],
+                'status' => $data['status'],
                 'email' => $data['email']
             ],$id
         );
@@ -80,9 +124,8 @@ class UserService{
         if (!in_array($user, $this->data)) {
             return sendError('Data Post Not exit');
         } else {
-            $user = Auth::user();
-            $user = $this->userRepository->getById($user);
-            if($user->can('delete',$user)){
+            $user = $this->getById($user);
+            if(Auth::user()->can('delete',$user)){
                 $result = $this->userRepository->delete($user->id);
                 if ($result) {
                     return sendSuccess([], 'Delete Data user Success !');

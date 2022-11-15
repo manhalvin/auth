@@ -22,6 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'status'
     ];
 
     /**
@@ -47,4 +48,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Groups::class);
     }
+
+    function role() {
+        return $this->belongsTo(Role::class, 'role_id');
+    }
+
 }

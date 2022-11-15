@@ -2,6 +2,9 @@
 
 namespace App\Policies;
 
+use App\Models\Permission;
+use App\Models\Role;
+use App\Models\RolePermission;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Support\Facades\Auth;
@@ -9,6 +12,8 @@ use Illuminate\Support\Facades\Auth;
 class UserPolicy
 {
     use HandlesAuthorization;
+    const GROUP_PERMISSION_ID =  7;
+    protected $roleArr = [];
 
     /**
      * Determine whether the user can view any models.
@@ -16,12 +21,33 @@ class UserPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
+    public function __construct()
+    {
+        $user = Auth::user();
+        foreach (RolePermission::all () as $v){
+            foreach (Role::all() as $role){
+                if($role->name == $user->role->name){
+                    if($v->role_id == $user->role->id){
+                        foreach (Permission::all() as $permission){
+                            if($v->permission_id == $permission->id){
+                                if($permission->group_permission_id == self::GROUP_PERMISSION_ID){
+                                    $this->roleArr[$v->role_id][] = $permission->name;
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+        return $this->roleArr;
+    }
+
     public function viewAny(User $user)
     {
-        $roleJson = $user->group->permissions;
-        if (!empty($roleJson)) {
-            $roleArr = json_decode($roleJson, true);
-            $check = isRole($roleArr, 'users', 'viewAny');
+        $roleArr = $this->roleArr;
+        if (!empty($roleArr)) {
+            $check = isRole($roleArr, '1', 'viewAny');
             if ($check) {
                 return true;
             }
@@ -38,10 +64,9 @@ class UserPolicy
      */
     public function view(User $user, User $model)
     {
-        $roleJson = $user->group->permissions;
-        if (!empty($roleJson)) {
-            $roleArr = json_decode($roleJson, true);
-            $check = isRole($roleArr, 'users', 'view');
+        $roleArr = $this->roleArr;
+        if (!empty($roleArr)) {
+            $check = isRole($roleArr, '1', 'view');
             if ($check && $user->id === $model->id) {
                 return true;
             }
@@ -57,10 +82,9 @@ class UserPolicy
      */
     public function create(User $user)
     {
-        $roleJson = $user->group->permissions;
-        if (!empty($roleJson)) {
-            $roleArr = json_decode($roleJson, true);
-            $check = isRole($roleArr, 'users', 'create');
+        $roleArr = $this->roleArr;
+        if (!empty($roleArr)) {
+            $check = isRole($roleArr, '1', 'create');
             if ($check) {
                 return true;
             }
@@ -77,10 +101,9 @@ class UserPolicy
      */
     public function update(User $user, User $model)
     {
-        $roleJson = $user->group->permissions;
-        if (!empty($roleJson)) {
-            $roleArr = json_decode($roleJson, true);
-            $check = isRole($roleArr, 'users', 'update');
+        $roleArr = $this->roleArr;
+        if (!empty($roleArr)) {
+            $check = isRole($roleArr, '1', 'edit');
             if ($check && $user->id === $model->id) {
                 return true;
             }
@@ -97,10 +120,9 @@ class UserPolicy
      */
     public function delete(User $user, User $model)
     {
-        $roleJson = $user->group->permissions;
-        if (!empty($roleJson)) {
-            $roleArr = json_decode($roleJson, true);
-            $check = isRole($roleArr, 'users', 'delete');
+        $roleArr = $this->roleArr;
+        if (!empty($roleArr)) {
+            $check = isRole($roleArr, '1', 'delete');
             if ($check && $user->id === $model->id) {
                 return true;
             }
