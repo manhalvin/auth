@@ -2,12 +2,9 @@
 
 namespace App\Http\Resources\API;
 
-use App\Http\Resources\groupResource;
-use App\Models\Groups;
-use App\Services\API\GroupService;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class userResource extends JsonResource
+class PermissionResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -20,12 +17,11 @@ class userResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'email' => $this->email,
-            'status' => $this->status == 1 ? "Active" : "UnActive",
+            'title' => optional($this->title),
+            'content' => optional($this->content),
+            'group_permission_name' => $this->groupPermission->name,
             'created_at' => $this->created_at->format('d/m/Y'),
             'updated_at' => $this->updated_at->format('d/m/Y'),
-            'group_name' => $this->group->name,
-            'group_id' =>  $this->group->id
         ];
     }
 }
