@@ -16,6 +16,6 @@ class Posts extends Model
     }
 
     public function book(){
-        return $this->belongsTo(Books::class,'user_id','id');
+        return $this->belongsTo(Books::class,'book_id','id');
     }
 }

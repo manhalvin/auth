@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Groups extends Model
+class Permission extends Model
 {
     use HasFactory;
-    protected  $table = "groups";
+    protected  $table = "permissions";
     protected $guarded = [];
 
-    public function user(){
-        return $this->belongsTo(User::class,'user_id','id');
+    public function groupPermission() {
+        return $this->belongsTo(GroupPermission::class);
     }
 }

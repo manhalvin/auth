@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use App\Models\bookTypes;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class bookResource extends JsonResource
+class BookResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

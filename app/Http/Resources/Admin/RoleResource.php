@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Resources\API;
-
+namespace App\Http\Resources\Admin;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserResource extends JsonResource
+class RoleResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -18,12 +17,8 @@ class UserResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'email' => $this->email,
-            'status' => $this->status == 1 ? "Active" : "UnActive",
             'created_at' => $this->created_at->format('d/m/Y'),
             'updated_at' => $this->updated_at->format('d/m/Y'),
-            'role_name' => $this->role->name,
-            'role_id' =>  $this->role->id
         ];
     }
 }

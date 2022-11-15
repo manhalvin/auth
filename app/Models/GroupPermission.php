@@ -5,14 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Books extends Model
+class GroupPermission extends Model
 {
-    use HasFactory;
-    protected  $table = "books";
+    protected  $table = "group_permissions";
     protected $guarded = [];
 
-    public function post(){
-        return $this->belongsTo(Posts::class);
+    public function permissions() {
+        return $this->hasMany(Permission::class);
     }
 
 }
