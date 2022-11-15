@@ -13,8 +13,8 @@ class CreateGroupPermissionsTable extends Migration {
     public function up() {
         Schema::create('group_permissions', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->nullable();
-            $table->string('content')->nullable();
+            $table->text('name')->nullable();
+            $table->text('content')->nullable();
             $table->timestamps();
         });
     }
