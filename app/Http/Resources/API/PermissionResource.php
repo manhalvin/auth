@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\API;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class PostResource extends JsonResource
+class PermissionResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,12 +16,10 @@ class PostResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'title' => $this->title,
-            'content' => $this->content,
-            'status' => $this->status == 1 ? "Active" : "UnActive",
-            'book_id' => $this->book->id,
-            'book_title' => $this->book->title,
-            'user_create' => $this->user->name,
+            'name' => $this->name,
+            'title' => optional($this->title),
+            'content' => optional($this->content),
+            'group_permission_name' => $this->groupPermission->name,
             'created_at' => $this->created_at->format('d/m/Y'),
             'updated_at' => $this->updated_at->format('d/m/Y'),
         ];

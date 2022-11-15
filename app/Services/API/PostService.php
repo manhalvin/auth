@@ -1,13 +1,15 @@
 <?php
 namespace App\Services\API;
 
-use App\Http\Resources\postResoure;
+use App\Http\Resources\PostResource;
 use App\Repositories\API\postRepository;
 use Illuminate\Support\Facades\Auth;
 
 class PostService{
 
     protected $postRepository;
+
+    const _PER_PAGE = 5;
     public function __construct(postRepository $postRepository)
     {
         $this->postRepository = $postRepository;
@@ -32,7 +34,7 @@ class PostService{
             return sendError('Data post not exit');
         } else {
             $data = $this->postRepository->getById($post);
-            return sendSuccess(new postResoure($data), 'Fetch Data Success !');
+            return sendSuccess(new PostResource($data), 'Fetch Data Success !');
         }
     }
 

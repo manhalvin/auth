@@ -2,6 +2,8 @@
 
 namespace App\Policies;
 
+use App\Models\GroupPermission;
+use App\Models\Permission;
 use App\Models\Posts;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -9,6 +11,8 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 class PostPolicy
 {
     use HandlesAuthorization;
+
+    const _Group_Permission_ID =  4;
 
     /**
      * Determine whether the user can view any models.
@@ -18,10 +22,19 @@ class PostPolicy
      */
     public function viewAny(User $user)
     {
-        $roleJson = $user->group->permissions;
-        if (!empty($roleJson)) {
-            $roleArr = json_decode($roleJson, true);
-            $check = isRole($roleArr, 'posts', 'viewAny');
+        $role = $user->role;
+        // $arr[] = $role->permissions;
+        foreach (Permission::all() as $permission) {
+            // $arr[] = $permission;
+            if($role->permissions->contains('name',$permission->name)){
+                if($permission->group_permission_id == self::_Group_Permission_ID){
+                    $roleArr[$permission->groupPermission->name][] = $permission->name;
+                }
+            }
+        }
+        // dd(json_encode($arr));
+        if (!empty($roleArr)) {
+            $check = isRole($roleArr, 'Posts', 'viewAny');
             if ($check) {
                 return true;
             }
@@ -38,15 +51,24 @@ class PostPolicy
      */
     public function view(User $user, Posts $posts)
     {
-        $roleJson = $user->group->permissions;
-        if (!empty($roleJson)) {
-            $roleArr = json_decode($roleJson, true);
-            $check = isRole($roleArr, 'posts', 'view');
+        $role = $user->role;
+
+        foreach (Permission::all() as $permission) {
+            if($role->permissions->contains('name',$permission->name)){
+                if($permission->group_permission_id == self::_Group_Permission_ID){
+                    $roleArr[$permission->groupPermission->name][] = $permission->name;
+                }
+            }
+        }
+
+        if (!empty($roleArr)) {
+            $check = isRole($roleArr, 'Posts', 'view');
             if ($check && $user->id === $posts->user_id) {
                 return true;
             }
         }
         return false;
+
     }
 
     /**
@@ -57,10 +79,17 @@ class PostPolicy
      */
     public function create(User $user)
     {
-        $roleJson = $user->group->permissions;
-        if (!empty($roleJson)) {
-            $roleArr = json_decode($roleJson, true);
-            $check = isRole($roleArr, 'posts', 'create');
+        $role = $user->role;
+        foreach (Permission::all() as $permission) {
+            if($role->permissions->contains('name',$permission->name)){
+                if($permission->group_permission_id == self::_Group_Permission_ID){
+                    $roleArr[$permission->groupPermission->name][] = $permission->name;
+                }
+            }
+        }
+
+        if (!empty($roleArr)) {
+            $check = isRole($roleArr, 'Posts', 'create');
             if ($check) {
                 return true;
             }
@@ -77,10 +106,18 @@ class PostPolicy
      */
     public function update(User $user, Posts $posts)
     {
-        $roleJson = $user->group->permissions;
-        if (!empty($roleJson)) {
-            $roleArr = json_decode($roleJson, true);
-            $check = isRole($roleArr, 'posts', 'update');
+        $role = $user->role;
+
+        foreach (Permission::all() as $permission) {
+            if($role->permissions->contains('name',$permission->name)){
+                if($permission->group_permission_id == self::_Group_Permission_ID){
+                    $roleArr[$permission->groupPermission->name][] = $permission->name;
+                }
+            }
+        }
+
+        if (!empty($roleArr)) {
+            $check = isRole($roleArr, 'Posts', 'update');
             if ($check && $user->id === $posts->user_id) {
                 return true;
             }
@@ -97,10 +134,16 @@ class PostPolicy
      */
     public function delete(User $user, Posts $posts)
     {
-        $roleJson = $user->group->permissions;
-        if (!empty($roleJson)) {
-            $roleArr = json_decode($roleJson, true);
-            $check = isRole($roleArr, 'posts', 'delete');
+        $role = $user->role;
+        foreach (Permission::all() as $permission) {
+            if($role->permissions->contains('name',$permission->name)){
+                if($permission->group_permission_id == self::_Group_Permission_ID){
+                    $roleArr[$permission->groupPermission->name][] = $permission->name;
+                }
+            }
+        }
+        if (!empty($roleArr)) {
+            $check = isRole($roleArr, 'Posts', 'delete');
             if ($check && $user->id === $posts->user_id) {
                 return true;
             }

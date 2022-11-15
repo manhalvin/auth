@@ -16,9 +16,9 @@ class UserController extends Controller
 {
     protected $UserService, $groupService;
 
-    protected $filters,$GroupID = [];
+    protected $filters,$group_id = [];
     protected $search = null;
-    const _PER_PAGE = 10;
+    const _PER_PAGE = 2;
     public function __construct(UserService $UserService, GroupService $groupService)
     {
         $this->UserService = $UserService;
@@ -46,7 +46,7 @@ class UserController extends Controller
             $sortType = $request->input('sort-type');
             $sortArr = $this->UserService->handleSort($sortBy,$sortType);
 
-            $user = $this->UserService->getAllUsers($this->filters, $this->search, $sortArr, self::_PER_PAGE,$this->GroupID);
+            $user = $this->UserService->getAllUsers($this->filters, $this->search, $sortArr, self::_PER_PAGE,$this->group_id);
             if ($user->count() == 0) {
                 return sendError([], 'Data not exist');
             } else {
@@ -134,7 +134,7 @@ class UserController extends Controller
     public function inputRole($role){
         if(!empty($role)){
             $role = explode(',',$role);
-            $this->GroupID = $this->groupService->getId($role);
+            $this->group_id = $this->groupService->getId($role);
         }
     }
 }
