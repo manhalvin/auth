@@ -13,7 +13,7 @@ class UserRepository
     }
 
     public function getAllUsers($filters = [], $keywords = null, $sortByArr = null, $perPage = null, $groupIds=null)
-    { 
+    {
         $users = $this->user
             ->select('users.*', 'roles.name as role_name')
             ->join('roles', 'users.role_id', '=', 'roles.id');

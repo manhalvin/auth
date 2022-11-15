@@ -87,11 +87,11 @@ class PostController extends Controller
         $data = $request->all();
         $posts = $this->postService->getById($post);
         if ($posts) {
-            if(Auth::user()->can('update',$posts)){
+            if (Auth::user()->can('update', $posts)) {
                 $this->postService->updateDataPost($data, $post);
                 return sendSuccess([], 'Update Data Post Success !');
-            }else{
-                return sendError([],'Prohibited Access');
+            } else {
+                return sendError([], 'Prohibited Access');
             }
         } else {
             return sendError('Data Post Not exit');
