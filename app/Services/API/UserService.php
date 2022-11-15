@@ -1,7 +1,7 @@
 <?php
 namespace App\Services\API;
 
-use App\Http\Resources\API\UserResource;
+use App\Http\Resources\UserResource;
 use App\Repositories\API\RoleRepository;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\API\UserRepository;
