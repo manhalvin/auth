@@ -7,7 +7,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
 
 
-class UserRequest extends FormRequest
+class EditImageRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,14 +27,14 @@ class UserRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|unique:users,name',
-            'email' => 'required|email|unique:users,email',
+            'title' => ['required','min:6'],
+            'content' => 'required|min:6',
+            'thumbnail' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
             'status' => 'required|integer|between:0,1',
-            'password' => 'required|min:6|max:10',
-            'role_id' => 'required|integer'
+            'book_id' => 'required|integer',
+            'user_id' => 'required|integer',
         ];
     }
-
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([

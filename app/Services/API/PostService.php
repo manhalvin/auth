@@ -1,16 +1,47 @@
 <?php
 namespace App\Services\API;
 
-use App\Http\Resources\postResoure;
+use App\Http\Resources\PostResource;
 use App\Repositories\API\postRepository;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Request;
 
 class PostService{
 
     protected $postRepository;
+
     public function __construct(postRepository $postRepository)
     {
         $this->postRepository = $postRepository;
+    }
+
+    public function handleIndex($request){
+        $keywords = '';
+
+        if ($request->has('keywords')) {
+            $keywords = $request->input('keywords');
+        }
+
+        if ($request->has('limit')) {
+            $limit = $request->input('limit');
+            $post = $this->getAllPosts($keywords, $limit);
+        } else {
+            $post = $this->getAllPosts($keywords, PER_PAGE);
+        }
+
+        if ($post->count() == 0) {
+            return sendError([], 'Data not exist');
+        } else {
+            $post = PostResource::collection($post);
+            return sendSuccess($post, 'Fetch data post success');
+        }
+    }
+
+    public function handleAdd($request){
+        $data = $request->all();
+        $result = $this->savePostData($data);
+        $result = new PostResource($result);
+        return sendSuccess($result, 'Inserted Data Success !');
     }
 
     public function getAllPosts($keywords,$limit){
@@ -32,7 +63,7 @@ class PostService{
             return sendError('Data post not exit');
         } else {
             $data = $this->postRepository->getById($post);
-            return sendSuccess(new postResoure($data), 'Fetch Data Success !');
+            return sendSuccess(new PostResource($data), 'Fetch Data Success !');
         }
     }
 
@@ -54,15 +85,15 @@ class PostService{
         } else {
             $user = Auth::user();
             $post = $this->postRepository->getById($post);
-            $data = ['idPost'=>$post->id,'idUserAuth'=>Auth::id(),'idGroupUser'=>Auth::user()->group->id,'nameGroupUser'=>Auth::user()->group->name,'userCreatePostID' => $post->user_id];
+
             if($user->can('delete',$post)){
                 $result = $this->postRepository->delete($post->id);
                 if ($result) {
-                    return sendSuccess($data, 'Delete Data Post Success !');
+                    return sendSuccess([], 'Delete Data Post Success !');
                 }
-                return sendError($data,'Delete Data Not Success');
+                return sendError([],'Delete Data Not Success');
             }
-            return sendError($data,'Prohibited Access');
+            return sendError([],'Prohibited Access');
         }
     }
 

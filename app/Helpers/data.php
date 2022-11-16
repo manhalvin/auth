@@ -49,3 +49,5 @@ function data_tree($data, $parent_id = 0, $level = 0)
     }
     return $result;
 }
+
+const PER_PAGE = 5;

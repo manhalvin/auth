@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
 
-class groupRequest extends FormRequest
+class PermissionRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,9 +26,9 @@ class groupRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required',
-            'permissions' => 'required',
-            'user_id' => 'required|integer'
+            'name' => 'required|min:5|unique:permissions,name',
+            'title' => 'required|min:5',
+            'group_permission_id' => 'required',
         ];
     }
 

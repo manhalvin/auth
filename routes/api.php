@@ -1,7 +1,12 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminGroupPermissionController;
+use App\Http\Controllers\Admin\AdminPermissionController;
+use App\Http\Controllers\API\AdminRoleController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\GroupsController;
+use App\Http\Controllers\API\ImageController;
+use App\Http\Controllers\API\ImagePostController;
 use App\Http\Controllers\API\PostController;
 use App\Http\Controllers\API\UserController;
 use Illuminate\Http\Request;
@@ -34,6 +39,11 @@ Route::prefix('admin/')->name('admin.')->middleware('auth:sanctum')->group(funct
         Route::post('/add', [PostController::class, 'postAdd']);
         Route::get('/add', [PostController::class, 'add'])->name('add');
 
+        // Add ~ Edit ~ Delete Image Post
+        Route::post('/add/image', [ImagePostController::class, 'imageStore'])->name('imageStore');
+        Route::post('/edit/image/{post}', [ImagePostController::class, 'imageEdit'])->name('imageEdit');
+        Route::delete('/delete/image/{post}', [ImagePostController::class, 'imageDelete'])->name('imageDelete');
+
         Route::get('/edit/{post}', [PostController::class, 'edit'])->name('edit');
         Route::put('/edit/{post}', [PostController::class, 'postEdit']);
 
@@ -52,18 +62,37 @@ Route::prefix('admin/')->name('admin.')->middleware('auth:sanctum')->group(funct
         Route::delete('/delete/{user}', [UserController::class, 'delete'])->name('delete');
     });
 
-     // Moduel Groups: Permissions ~ Roles
-    Route::prefix('groups')->name('groups.')->group(function () {
-        Route::get('/', [GroupsController::class, 'index'])->name('index');
-        Route::post('/add', [GroupsController::class, 'postAdd']);
-        Route::get('/add', [GroupsController::class, 'add'])->name('add');
+     // Moduel Roles
+    Route::prefix('role')->name('role.')->group(function () {
+        Route::get('/', [AdminRoleController::class, 'list'])->name('list');
 
-        Route::put('edit/{group}', [GroupsController::class, 'postPermission']);
+        Route::post('/add', [AdminRoleController::class, 'postAdd']);
+        Route::get('/add', [AdminRoleController::class, 'add'])->name('add');
 
-        Route::put('/permission/{group}', [GroupsController::class, 'postPermission']);
-        Route::get('/permission/{group}', [GroupsController::class, 'permission']);
+        Route::get('update/{role}', [AdminRoleController::class, 'getUpdate'])->name('update');
+        Route::put('update/{role}', [AdminRoleController::class, 'putUpdate']);
 
-        Route::put('/permission-advance/{group}', [GroupsController::class, 'permissionAdvance']);
+        Route::delete('delete/{role}', [AdminRoleController::class, 'delete'])->name('delete');
+    });
+
+    Route::prefix('permission')->name('groupPermission.')->group(function () {
+        Route::get('/group', [AdminGroupPermissionController::class, 'list'])->name('list');
+
+        Route::post('/group/add', [AdminGroupPermissionController::class, 'store']);
+
+        Route::get('/group/update/{id}', [AdminGroupPermissionController::class, 'getUpdate'])->name('update');
+        Route::put('/group/update/{id}', [AdminGroupPermissionController::class, 'putUpdate']);
+
+        Route::delete('/group/delete/{id}', [AdminGroupPermissionController::class, 'delete'])->name('delete');
+
+        Route::get('/', [AdminPermissionController::class, 'list'])->name('list');
+
+        Route::post('/add', [AdminPermissionController::class, 'store']);
+
+        Route::get('/update/{id}', [AdminPermissionController::class, 'getUpdate'])->name('update');
+        Route::put('/update/{id}', [AdminPermissionController::class, 'putUpdate']);
+
+        Route::delete('/delete/{id}', [AdminPermissionController::class, 'delete'])->name('delete');
     });
 
 });
