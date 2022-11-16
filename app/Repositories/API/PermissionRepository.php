@@ -17,7 +17,7 @@ class PermissionRepository
     }
 
     public function getList(){
-        return $this->permission->latest()->paginate(5);
+        return $this->permission->latest()->paginate(PER_PAGE);
     }
 
     public function handleAdd($dataInsert){

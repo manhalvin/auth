@@ -137,7 +137,6 @@ class UserPolicy
      * @return \Illuminate\Auth\Access\Response|bool
      */
 
-
     /**
      * Determine whether the user can permanently delete the model.
      *

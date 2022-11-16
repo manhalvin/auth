@@ -13,7 +13,7 @@ class RoleRepository
     }
 
     public function searchRole($search){
-        return $this->role->where('name', 'like', "%{$search}%")->latest()->paginate(5);
+        return $this->role->where('name', 'like', "%{$search}%")->latest()->paginate(PER_PAGE);
     }
 
     public function addRole($dataRole){

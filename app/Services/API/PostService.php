@@ -26,7 +26,7 @@ class PostService{
             $limit = $request->input('limit');
             $post = $this->getAllPosts($keywords, $limit);
         } else {
-            $post = $this->getAllPosts($keywords,PER_PAGE);
+            $post = $this->getAllPosts($keywords, PER_PAGE);
         }
 
         if ($post->count() == 0) {

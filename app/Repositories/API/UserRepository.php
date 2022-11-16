@@ -88,7 +88,7 @@ class UserRepository
 
     public function delete($id)
     {
-        return 1;
+        return true;
 //        return $this->user->findOrFail($id)->delete();
     }
 }

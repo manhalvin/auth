@@ -43,7 +43,7 @@ class UserService{
         $sortType = $request->input('sort-type');
         $sortArr = $this->handleSort($sortBy,$sortType);
 
-        $user = $this->getAllUsers($this->filters, $this->search, $sortArr, PER_PAGE,$this->group_id);
+        $user = $this->getAllUsers($this->filters, $this->search, $sortArr,PER_PAGE,$this->group_id);
         if ($user->count() == 0) {
             return sendError([], 'Data not exist');
         } else {
