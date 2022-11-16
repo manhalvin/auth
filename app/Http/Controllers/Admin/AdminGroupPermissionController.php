@@ -19,6 +19,7 @@ class AdminGroupPermissionController extends Controller
     public function list(){
         $groupPermissions = $this->groupPermissionService->getList();
         return sendSuccess($groupPermissions,'Fetch Data Success');
+        // 123
     }
 
     public function store(GroupPermissionRequest $request){
@@ -30,6 +31,7 @@ class AdminGroupPermissionController extends Controller
         ];
         $this->groupPermissionService->handleAdd( $dataInsert );
         return sendSuccess('','Add Group Permission Success');
+        // 456
     }
 
     public function putUpdate($id,UpdateGroupPermissionRequest $request){
