@@ -32,7 +32,6 @@ class BookSeeder extends Seeder
             ['title' => 'Book 11','content' => 'Content 4','type_id' => 2,'created_at' => Carbon::now(),'updated_at' => Carbon::now()],
             ['title' => 'Book 12','content' => 'Content 5','type_id' => 3,'created_at' => Carbon::now(),'updated_at' => Carbon::now()],
             ['title' => 'Book 13','content' => 'Content 6','type_id' => 4,'created_at' => Carbon::now(),'updated_at' => Carbon::now()],
-            ['title' => 'Book 14','content' => 'Content 7','type_id' => 6,'created_at' => Carbon::now(),'updated_at' => Carbon::now()]
         ]);
     }
 }

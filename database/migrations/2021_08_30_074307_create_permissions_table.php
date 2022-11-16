@@ -13,10 +13,10 @@ class CreatePermissionsTable extends Migration {
     public function up() {
         Schema::create('permissions', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('title');
-            $table->text('content');
-            $table->unsignedBigInteger('group_permission_id');
+            $table->string('name')->nullable();
+            $table->string('title')->nullable();
+            $table->text('content')->nullable();
+            $table->unsignedBigInteger('group_permission_id')->nullable();
             $table->foreign('group_permission_id')->references('id')->on('group_permissions')->onDelete('cascade');
             $table->timestamps();
         });
