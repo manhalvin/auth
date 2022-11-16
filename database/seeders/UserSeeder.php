@@ -35,6 +35,7 @@ class UserSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
                 'email_verified_at' => now(),
+                'role_id' => 1
             ],
             [
                 'name' => 'Quốc Việt',
@@ -43,6 +44,7 @@ class UserSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
                 'email_verified_at' => now(),
+                'role_id' => 2
             ],
         ]);
     }

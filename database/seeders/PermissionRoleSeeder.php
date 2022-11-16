@@ -16,13 +16,13 @@ class PermissionRoleSeeder extends Seeder
     public function run()
     {
         DB::table('role_permissions')->insert([
-            ['permission_id' => 17, 'role_id' => 1 ,'created_at' => now(),
+            ['permission_id' => 1, 'role_id' => 1 ,'created_at' => now(),
             'updated_at' => now()],
-            ['permission_id' => 18, 'role_id' => 1, 'created_at' => now(),
+            ['permission_id' => 2, 'role_id' => 1, 'created_at' => now(),
             'updated_at' => now()],
-            ['permission_id' => 19, 'role_id' => 1, 'created_at' => now(),
+            ['permission_id' => 3, 'role_id' => 1, 'created_at' => now(),
             'updated_at' => now()],
-            ['permission_id' => 20, 'role_id' => 1, 'created_at' => now(),
+            ['permission_id' => 4, 'role_id' => 1, 'created_at' => now(),
             'updated_at' => now()]
         ]);
     }
