@@ -13,6 +13,77 @@ use Illuminate\Support\Facades\Auth;
 class PostPolicy
 {
     use HandlesAuthorization;
+    protected $roleArr = [];
+
+    public function __construct()
+    {
+        $user = Auth::user();
+        foreach (RolePermission::all () as $v){
+            foreach (Role::all() as $role){
+                if($role->name == $user->role->name){
+                    if($v->role_id == $user->role->id){
+                        foreach (Permission::all() as $permission){
+                            if($v->permission_id == $permission->id){
+                                if($permission->group_permission_id == 4){
+                                    $this->roleArr[$v->role_id][] = $permission->name;
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+        return $this->roleArr;
+    }
+
+    protected $roleArr = [];
+
+    public function __construct()
+    {
+        $user = Auth::user();
+        foreach (RolePermission::all () as $v){
+            foreach (Role::all() as $role){
+                if($role->name == $user->role->name){
+                    if($v->role_id == $user->role->id){
+                        foreach (Permission::all() as $permission){
+                            if($v->permission_id == $permission->id){
+                                if($permission->group_permission_id == 4){
+                                    $this->roleArr[$v->role_id][] = $permission->name;
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+        return $this->roleArr;
+    }
+
+    protected $roleArr = [];
+
+    public function __construct()
+    {
+        $user = Auth::user();
+        foreach (RolePermission::all () as $v){
+            foreach (Role::all() as $role){
+                if($role->name == $user->role->name){
+                    if($v->role_id == $user->role->id){
+                        foreach (Permission::all() as $permission){
+                            if($v->permission_id == $permission->id){
+                                if($permission->group_permission_id == 4){
+                                    $this->roleArr[$v->role_id][] = $permission->name;
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+        return $this->roleArr;
+    }
 
     protected $roleArr = [];
 
