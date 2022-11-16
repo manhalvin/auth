@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use App\Services\API\GroupService;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class userResoure extends JsonResource
+class UserResource extends JsonResource
 {
 
     /**
@@ -20,8 +20,11 @@ class userResoure extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
+            'status' => $this->status == 1 ? "Active" : "Unactive",
             'created_at' => $this->created_at->format('d/m/Y'),
             'updated_at' => $this->updated_at->format('d/m/Y'),
+            'role_name' => $this->role->name,
+            'role_id' =>  $this->role->id
         ];
     }
 }

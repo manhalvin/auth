@@ -15,8 +15,8 @@ class UserRepository
     public function getAllUsers($filters = [], $keywords = null, $sortByArr = null, $perPage = null, $groupIds=null)
     {
         $users = $this->user
-            ->select('users.*', 'groups.name as group_name')
-            ->join('groups', 'users.group_id', '=', 'groups.id');
+            ->select('users.*', 'roles.name as role_name')
+            ->join('roles', 'users.role_id', '=', 'roles.id');
 
         $orderBy = 'users.created_at';
         $orderType = 'desc';
@@ -41,7 +41,7 @@ class UserRepository
 
         if (!empty($perPage)) {
             if(!empty($groupIds)){
-                $users = $users->whereIn('group_id', $groupIds)->paginate($perPage)->withQueryString();
+                $users = $users->whereIn('role_id', $groupIds)->paginate($perPage)->withQueryString();
             }else{
                 $users = $users->paginate($perPage)->withQueryString();
             }
@@ -75,7 +75,8 @@ class UserRepository
         $user->name = $data['name'];
         $user->email = $data['email'];
         $user->password = Hash::make($data['password']);
-        $user->group_id = $data['group_id'];
+        $user->role_id = $data['role_id'];
+        $user->status = $data['status'];
         $user->save();
         return $user->fresh();
     }
@@ -87,6 +88,7 @@ class UserRepository
 
     public function delete($id)
     {
-        return $this->user->findOrFail($id)->delete();
+        return true;
+//        return $this->user->findOrFail($id)->delete();
     }
 }
