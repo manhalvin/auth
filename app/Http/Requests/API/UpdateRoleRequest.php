@@ -7,7 +7,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
 
 
-class addGroupRequest extends FormRequest
+class UpdateRoleRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,9 +27,9 @@ class addGroupRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|unique:groups,name',
-            'permissions' => 'required',
-            'user_id' => 'required|integer'
+            'name' => 'required',
+            'description' => 'required',
+            'permission_id' => 'required',
         ];
     }
 
