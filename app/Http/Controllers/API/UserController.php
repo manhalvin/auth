@@ -35,9 +35,9 @@ class UserController extends Controller
     public function show($user)
     {
         $result = $this->UserService->handleShow($user);
-        $user = $this->UserService->getById($user);
-        if ($user) {
-            if (Auth::user()->can('view', $user)) {
+        $users = $this->UserService->getById($user);
+        if ($users) {
+            if (Auth::user()->can('view', $users)) {
                 return $result;
             } else {
                 return sendError([], 'Prohibited Access');
