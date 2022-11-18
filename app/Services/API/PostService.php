@@ -4,6 +4,7 @@ namespace App\Services\API;
 use App\Http\Resources\PostResource;
 use App\Repositories\API\postRepository;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Request;
 
 class PostService{
@@ -37,9 +38,19 @@ class PostService{
         }
     }
 
-    public function handleAdd($request){
+    public function savePostData($request){
         $data = $request->all();
-        $result = $this->savePostData($data);
+        $hasFile = $request->hasFile('thumbnail');
+        $thumbnail = $request->file('thumbnail');
+        if ($hasFile) {
+            $imageName = $thumbnail->getClientOriginalName();
+
+            $thumbnail->move('image/posts', $imageName);
+            $image = 'image/posts/' . $imageName;
+            $data['thumbnail'] = $image;
+
+        }
+        $result = $this->postRepository->savePostData($data);
         $result = new PostResource($result);
         return sendSuccess($result, 'Inserted Data Success !');
     }
@@ -47,11 +58,6 @@ class PostService{
     public function getAllPosts($keywords,$limit){
         $select = $this->postRepository->getAllPosts($keywords,$limit);
         return $select;
-    }
-
-    public function savePostData($data){
-        $result = $this->postRepository->savePostData($data);
-        return $result;
     }
 
     public function handleEdit($post){
@@ -71,7 +77,25 @@ class PostService{
         return $this->postRepository->getById($post);
     }
 
-    public function updateDataPost($data, $post){
+    public function updateDataPost($request, $post){
+        $result = $this->postRepository->getById($post);
+        $hasFile = $request->hasFile('thumbnail');
+        $thumbnail = $request->file('thumbnail');
+        $data = $request->all();
+        if (!empty($result->thumbnail)) {
+            if (File::exists(public_path($result->thumbnail))) {
+                unlink($result->thumbnail);
+            }
+        }
+        if ($hasFile) {
+
+            $imageName = $thumbnail->getClientOriginalName();
+
+            $thumbnail->move('image/posts', $imageName);
+            $image = 'image/posts/' . $imageName;
+            $data['thumbnail'] = $image;
+
+        }
         return $this->postRepository->updateDataPost($data, $post);
     }
 

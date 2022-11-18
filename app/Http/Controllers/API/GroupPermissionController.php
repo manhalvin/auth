@@ -8,7 +8,7 @@ use App\Http\Requests\API\UpdateGroupPermissionRequest;
 use App\Services\API\GroupPermissionService;
 use Illuminate\Http\Request;
 
-class AdminGroupPermissionController extends Controller
+class GroupPermissionController extends Controller
 {
 
     protected $groupPermissionService;
@@ -17,30 +17,34 @@ class AdminGroupPermissionController extends Controller
         $this->groupPermissionService = $groupPermissionService;
     }
 
-    public function list(){
+    public function index(){
         $groupPermissions = $this->groupPermissionService->getList();
         return sendSuccess($groupPermissions,'Fetch Data Success');
     }
 
+    public function create(){
+        return sendSuccess([],'View: Create Group Permission');
+    }
+
     public function store(GroupPermissionRequest $request){
-        $name = $request->name;
-        $description = $request->description;
-        $dataInsert = [
-            'name' => $name,
-            'description' => $description,
-        ];
-        $this->groupPermissionService->handleAdd( $dataInsert );
+        $data = $request->all();
+        $this->groupPermissionService->handleAdd($data);
         return sendSuccess('','Add Group Permission Success');
     }
 
-    public function putUpdate($id,UpdateGroupPermissionRequest $request){
+    public function update($id,UpdateGroupPermissionRequest $request){
         $name = $request->name;
         $description = $request->description;
         $this->groupPermissionService->update($id,$name,$description);
-        return sendSuccess('','Update Group Permission Success');
+        return sendSuccess([],'Update Group Permission Success');
     }
 
-    public function getUpdate($id){
+    public function show($id){
+        $result = $this->groupPermissionService->getId($id);
+        return sendSuccess($result,'Show Group Permission Success');
+    }
+
+    public function edit($id){
         $result = $this->groupPermissionService->getId($id);
         return sendSuccess($result,'Fetch Group Permission Success');
     }

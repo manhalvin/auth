@@ -10,7 +10,7 @@ use App\Services\API\GroupPermissionService;
 use App\Services\API\RoleService;
 use Illuminate\Http\Request;
 
-class AdminRoleController extends Controller
+class RoleController extends Controller
 {
 
     protected $roleService, $groupPermissionService;
@@ -19,7 +19,7 @@ class AdminRoleController extends Controller
         $this->roleService = $roleService;
         $this->groupPermissionService = $groupPermissionService;
     }
-    function list(Request $request) {
+    function index(Request $request) {
         $search = '';
         if ($request->has('search')) {
             $search = $request->input('search');
@@ -28,12 +28,12 @@ class AdminRoleController extends Controller
         return sendSuccess($result, 'Fetch Data Role Success');
     }
 
-    public function add()
+    public function create()
     {
         return sendSuccess([], 'View: Add Role');
     }
 
-    public function postAdd(RoleRequest $request)
+    public function store(RoleRequest $request)
     {
         $name = $request->input('name');
         $description = $request->input('description');
@@ -41,7 +41,7 @@ class AdminRoleController extends Controller
         return $this->roleService->handleAdd($name, $description, $permission_id);
     }
 
-    public function getUpdate($role)
+    public function show($role)
     {
         $groupPermissions = $this->groupPermissionService->getAll();
         $role = $this->roleService->getId($role);
@@ -51,10 +51,23 @@ class AdminRoleController extends Controller
             'role' => $role,
             'permissionsChecked' => $permissionsChecked
         ];
-        return sendSuccess($result,'Fetch Data Success');
+        return sendSuccess($result,'Show Data Success');
     }
 
-    function putUpdate($role, UpdateRoleRequest $request) {
+    public function edit($role)
+    {
+        $groupPermissions = $this->groupPermissionService->getAll();
+        $role = $this->roleService->getId($role);
+        $permissionsChecked = $role->permissions;
+        $result = [
+            'groupPermissions' => $groupPermissions,
+            'role' => $role,
+            'permissionsChecked' => $permissionsChecked
+        ];
+        return sendSuccess($result,'Edit Data Success');
+    }
+
+    function update($role, UpdateRoleRequest $request) {
         $name = $request->input('name');
         $description = $request->input('description');
         $permission_id = $request->input('permission_id');

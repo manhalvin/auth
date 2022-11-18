@@ -10,7 +10,7 @@ use App\Services\API\PermissionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
-class AdminPermissionController extends Controller
+class PermissionController extends Controller
 {
     protected $permissionService;
     public function __construct(PermissionService $permissionService)
@@ -18,9 +18,12 @@ class AdminPermissionController extends Controller
         $this->permissionService = $permissionService;
     }
 
-    public function list(){
+    public function index(){
         $permissions = PermissionResource::collection($this->permissionService->getList());
         return sendSuccess($permissions,'Fetch Data Success');
+    }
+    public function create(){
+        return sendSuccess([],'View: Add Permission Success');
     }
 
     public function store(PermissionRequest $request){
@@ -36,7 +39,7 @@ class AdminPermissionController extends Controller
         return sendSuccess('','Add Permission Success');
     }
 
-    public function putUpdate($id,UpdatePermissionRequest $request){
+    public function update($id,UpdatePermissionRequest $request){
         $name = $request->input('name');
         $title = $request->input('title');
         $group_permission_id = $request->input('group_permission_id');
@@ -44,9 +47,14 @@ class AdminPermissionController extends Controller
         return sendSuccess([],'Update Permission Success');
     }
 
-    public function getUpdate($id){
+    public function show($id){
         $result = new PermissionResource($this->permissionService->getId($id));
         return sendSuccess($result,'Fetch Permission Success');
+    }
+
+    public function edit($id){
+        $result = new PermissionResource($this->permissionService->getId($id));
+        return sendSuccess($result,'Edit Permission Success');
     }
 
     public function delete($id){

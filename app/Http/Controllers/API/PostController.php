@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
-    protected $data = array();
     protected $postService;
 
     public function __construct(PostService $postService)
@@ -32,20 +31,20 @@ class PostController extends Controller
 
     }
 
-    public function add()
+    public function create()
     {
         if (Auth::user()->can('create', Posts::class)) {
-            return sendSuccess([], 'View: Add Post');
+            return sendSuccess([], 'View: Create Post');
         } else {
             return sendError([], 'Prohibited Access');
         }
 
     }
 
-    public function postAdd(PostRequest $request)
+    public function store(PostRequest $request)
     {
         if (Auth::user()->can('create', Posts::class)) {
-            return $this->postService->handleAdd($request);
+            return $this->postService->savePostData($request);
         } else {
             return sendError([], 'Prohibited Access');
         }
@@ -82,13 +81,12 @@ class PostController extends Controller
         }
     }
 
-    public function postEdit(EditPostRequest $request, $post)
+    public function update(EditPostRequest $request, $post)
     {
-        $data = $request->all();
         $posts = $this->postService->getById($post);
         if ($posts) {
             if (Auth::user()->can('update', $posts)) {
-                $this->postService->updateDataPost($data, $post);
+                $this->postService->updateDataPost($request, $post);
                 return sendSuccess([], 'Update Data Post Success !');
             } else {
                 return sendError([], 'Prohibited Access');

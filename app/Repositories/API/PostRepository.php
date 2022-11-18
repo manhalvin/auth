@@ -36,14 +36,8 @@ class PostRepository
     }
 
     public function savePostData($data){
-        $post = new Posts();
-        $post->title = $data['title'];
-        $post->content = $data['content'];
-        $post->status = $data['status'];
-        $post->book_id = $data['book_id'];
-        $post->user_id = $data['user_id'];
-        $post->save();
-        return $post->fresh();
+        $result = $this->posts->create($data);
+        return $result;
     }
 
     public function getAllPost(){
