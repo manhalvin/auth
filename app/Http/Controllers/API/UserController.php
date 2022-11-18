@@ -14,8 +14,6 @@ use Illuminate\Support\Facades\DB;
 class UserController extends Controller
 {
     protected $UserService;
-    protected $filters = [];
-    protected $search = null;
 
     public function __construct(UserService $UserService)
     {
@@ -47,7 +45,7 @@ class UserController extends Controller
         }
     }
 
-    public function postAdd(UserRequest $request)
+    public function store(UserRequest $request)
     {
         if (Auth::user()->can('create', User::class)) {
             return $this->UserService->handleAdd($request);
@@ -70,7 +68,7 @@ class UserController extends Controller
         }
     }
 
-    public function postEdit(EditUserRequest $request,$user)
+    public function update(EditUserRequest $request,$user)
     {
         $data = $request->all();
         $users = $this->UserService->getById($user);
